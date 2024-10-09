@@ -83,10 +83,14 @@ func resolveIRR(c *gin.Context) {
 		return
 	}
 
+	fmt.Println("Calculating roots")
+
 	diff := []float64{}
 	for i := 0; i < length; i++ {
 		diff = append(diff, request.Income[i]-request.Spending[i])
 	}
+
+	fmt.Println("Calculating roots - extended")
 
 	// Call RealRoots and handle potential errors
 	roots, err := resolver.RealRoots(length-1, diff)
