@@ -11,7 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Structs for request and response
 type IRRRequest struct {
 	Spending []float64 `json:"spending"`
 	Income   []float64 `json:"income"`
@@ -99,7 +98,7 @@ func resolveIRR(c *gin.Context) {
 	}
 
 	// Find the IRR based on the root
-	var v float64
+	var v float64 = 0
 	for _, root := range roots {
 		if root >= 0 && root < 1 {
 			v = root
@@ -118,7 +117,6 @@ func resolveIRR(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, IRRResponse{
 			Status: 1,
-			Irr:    math.NaN(),
 			Error:  "IRR calculation resulted in NaN.",
 		})
 	}
