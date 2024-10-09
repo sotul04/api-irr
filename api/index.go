@@ -21,7 +21,7 @@ type IRRRequest struct {
 type IRRResponse struct {
 	Status int     `json:"status"`
 	Irr    float64 `json:"irr"`
-	Error  string  `json:"error,omitempty"`
+	Error  string  `json:"error"`
 }
 
 var (
@@ -83,14 +83,10 @@ func resolveIRR(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("Calculating roots")
-
 	diff := []float64{}
 	for i := 0; i < length; i++ {
 		diff = append(diff, request.Income[i]-request.Spending[i])
 	}
-
-	fmt.Println("Calculating roots - extended")
 
 	// Call RealRoots and handle potential errors
 	roots, err := resolver.RealRoots(length-1, diff)
@@ -102,9 +98,6 @@ func resolveIRR(c *gin.Context) {
 		return
 	}
 
-	// Log the roots
-	fmt.Printf("Calculated roots: %+v\n", roots)
-
 	// Find the IRR based on the root
 	var v float64
 	for _, root := range roots {
@@ -115,8 +108,6 @@ func resolveIRR(c *gin.Context) {
 	}
 
 	irr := resolver.GetIRR(v)
-
-	fmt.Println("Sending response")
 
 	// Send response based on whether IRR is NaN or not
 	if !math.IsNaN(irr) {
