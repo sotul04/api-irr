@@ -2,6 +2,7 @@ package api
 
 import (
 	"api-irr/resolver"
+	"fmt"
 	"math"
 	"net/http"
 	"time"
@@ -53,33 +54,36 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	app.ServeHTTP(w, r)
 }
 
-// resolveIRR handles the POST request for solving IRR
 func resolveIRR(c *gin.Context) {
 	var request IRRRequest
+	// Bind the JSON request to the IRRRequest struct
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	// Log the request data to ensure it's correctly parsed
+	fmt.Printf("Received request: %+v\n", request)
 
 	if request.Code != "resolve" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Your request is rejected."})
 		return
 	}
 
+	// Perform IRR calculation
 	length := len(request.Spending)
-
 	if length != len(request.Income) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Number of income and outcome is not equal."})
 		return
 	}
 
+	// Check for input validity
 	if length < 2 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Number of income and outcome is less than 2."})
 		return
 	}
 
 	diff := []float64{}
-
 	for i := 0; i < length; i++ {
 		diff = append(diff, request.Income[i]-request.Spending[i])
 	}
@@ -94,6 +98,10 @@ func resolveIRR(c *gin.Context) {
 		return
 	}
 
+	// Log the roots
+	fmt.Printf("Calculated roots: %+v\n", roots)
+
+	// Find the IRR based on the root
 	var v float64
 	for _, root := range roots {
 		if root >= 0 && root < 1 {
