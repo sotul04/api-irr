@@ -116,6 +116,8 @@ func resolveIRR(c *gin.Context) {
 
 	irr := resolver.GetIRR(v)
 
+	fmt.Println("Sending response")
+
 	// Send response based on whether IRR is NaN or not
 	if !math.IsNaN(irr) {
 		c.JSON(http.StatusOK, IRRResponse{

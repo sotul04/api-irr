@@ -58,5 +58,5 @@ func GetIRR(v float64) float64 {
 	}
 	d := 1 - v
 	irr := d / (1 - d)
-	return math.Round(irr*10000) / 100
+	return irr * 100
 }
