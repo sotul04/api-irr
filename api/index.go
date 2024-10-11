@@ -100,7 +100,7 @@ func resolveIRR(c *gin.Context) {
 	// Find the IRR based on the root
 	var v float64 = 0
 	for _, root := range roots {
-		if root >= 0 && root < 1 {
+		if root > -1 && root < 1 {
 			v = root
 			break
 		}
